@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML5 Boilerplate</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="sidebar-container">
+        <div id="title">🍕 Our Cool Pizza Map</div>
+        <p>We crowdsourced some data in a google sheet, converted it to JSON data, and used it to make a marker map of
+            everyone's favorite pizza place.</p>
+        <p><strong>Click a marker to see the name of the pizza place and who likes it.</strong></p>
+        <p>The markers are color-coded by program:</p>
+        <div id="legend">
+    
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: purple;"></div>
+                <span>Tandon</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: red;"></div>
+                <span>NYU Journalism</span>
+
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: green;"></div>
+                <span>NYU MUP</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: black;"></div>
+                <span>NYU MAUSP</span>
+
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: orange;"></div>
+                <span>NYU MSPP</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: steelblue;"></div>
+                <span>Instructor</span>
+            </div>
+
+        </div>
+    </div>
+    <div id="map-container"></div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+    <script src="data.js"></script>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
