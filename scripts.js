@@ -7,87 +7,115 @@ const mapOptions = {
     container: 'map-container', // container ID
     center: [-73.99432, 40.71103], // starting position [lng, lat]. Note that lat must be set between -90 and 90
     zoom: 10.92, // starting zoom
-    // bearing: 29,
-    // style: 'mapbox://styles/mapbox/outdoors-v12'
-    // hash: true
 }
 
-const coolMap = new mapboxgl.Map(mapOptions);
+const map = new mapboxgl.Map(mapOptions);
+
+console.log(randomPoints)
 
 
-const markerOptions = {
-    color: '#57068C',
-}
+map.on('load', () => {
 
-
-// // create the popup
-// const popup = new mapboxgl.Popup({
-//     offset: 36,
-// }).setText(
-//     'This is the NYU Wagner building. It is located at 105 E. 17th St, New York, NY 10003.'
-// );
-
-
-// // NYU Wagner building
-// const marker1 = new mapboxgl.Marker(markerOptions)
-//     .setLngLat([-73.98828, 40.73638])
-//     .setPopup(popup)
-//     .addTo(coolMap);
-
-// // some point north of NYU Wagner
-// const marker2 = new mapboxgl.Marker(markerOptions)
-//     .setLngLat([-73.98828, 40.73])
-//     .addTo(coolMap);
-
-// // union square marker
-// const marker3 = new mapboxgl.Marker(markerOptions)
-//     .setLngLat([-73.99031, 40.73592])
-//     .addTo(coolMap);
-
-
-// now let's make a markers for our favorite pizza places
-
-pizzaData.forEach((record) => {
-    const popup = new mapboxgl.Popup({
-        offset: 36,
-    }).setText(
-        `${record.first_name}'s favorite pizza shop is ${record.pizza_shop}.`
-    );
-
-    let programColor = '#ccc';
-
-    if (record.program === 'MUP') {
-        programColor = 'green'
-    }
-
-    if (record.program === 'instructor') {
-        programColor = 'steelblue'
-    }
-
-    if (record.program === 'Journalism') {
-        programColor = 'red'
-    }
-
-    if (record.program === 'Tandon') {
-        programColor = 'purple'
-    }
-
-    if (record.program === 'MSPP') {
-        programColor = 'orange'
-    }
-
-    if (record.program === 'MAUSP') {
-        programColor = 'black'
-    }
-
-
-
-
-    new mapboxgl.Marker({
-        scale: 0.8,
-        color: programColor
+    // add 3 rando points I made in geojson.io
+    map.addSource('randomPoints', {
+        type: 'geojson',
+        data: randomPoints
     })
-        .setLngLat([record.longitude, record.latitude])
-        .setPopup(popup)
-        .addTo(coolMap)
+
+    // add the governors island aura
+    map.addSource('governorsIsland', {
+        type: 'geojson',
+        data: governorsIslandAura
+    })
+
+    // add the governors island aura
+    map.addSource('boroBoundaries', {
+        type: 'geojson',
+        data: './data/boro-boundaries.geojson'
+    })
+
+    // add the governors island aura
+    map.addSource('brooklynBlocks', {
+        type: 'geojson',
+        data: './data/brooklyn-blocks.geojson'
+    })
+
+    map.addLayer({
+        id: 'randomPoints',
+        type: 'circle',
+        source: 'randomPoints',
+        paint: {
+            'circle-radius': 10,
+            'circle-color': '#FF0000',
+            'circle-opacity': 0.5,
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#FFFFFF',
+            'circle-stroke-opacity': 1
+        }
+    })
+
+    map.addLayer({
+        id: 'fillGovernorsIslandAura',
+        type: 'fill',
+        source: 'governorsIsland',
+        paint: {
+            'fill-color': 'steelblue',
+            'fill-opacity': 0.4,
+        }
+    })
+
+    map.addLayer({
+        id: 'boroBoundaries',
+        type: 'fill',
+        source: 'boroBoundaries',
+        paint: {
+            'fill-color': [
+                'match',
+                ['get', 'BoroName'],
+                'Staten Island', '#f4f455',
+                'Manhattan', '#f7d496',
+                'Queens', '#FF9900',
+                'Brooklyn', '#f7cabf',
+                'Bronx', '#ea6661',
+                /* other */ '#ccc'
+            ]
+            ,
+            'fill-opacity': 0.9,
+        },
+        slot: 'middle'
+    })
+
+    map.addLayer({
+        id: 'boroBoundariesOutline',
+        type: 'line',
+        source: 'boroBoundaries',
+        paint: {
+           'line-color': '#000',
+            'line-width': 2,
+            'line-opacity': 0.6
+        },
+        slot: 'middle'
+    })
+
+    map.addLayer({
+        id: 'brooklynBlocks',
+        type: 'fill',
+        source: 'brooklynBlocks',
+        paint: {
+            'fill-color': [ // use an expression for data-driven styling
+                'interpolate',
+                ['linear'],
+                ['get', "UnitsRes"],
+                0,
+                '#ece7f2',
+                4,
+                '#a6bddb',
+                10,
+                '#2b8cbe'
+            ]
+,
+            'fill-opacity': 1,
+        }
+    })
+
 })
